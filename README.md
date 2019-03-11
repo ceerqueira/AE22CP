@@ -18,6 +18,13 @@ Média = (P1 + P2 + P3) / 3
 
 Sub: 15/07
 
+---
+
+* PDFs livros de algorítmos:
+
+https://drive.google.com/open?id=1LvxKy6sntDpep5XkY9YQ2GoiClf1KmX2
+
+
 
 
 
