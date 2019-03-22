@@ -1,5 +1,5 @@
 Exercícios no link:
-www.hackerrank.com/exercicios-com-structs
+https://www.hackerrank.com/contests/exercicios-com-structs/challenges
 
 
 
