@@ -12,4 +12,7 @@ main() {
 
     d = distancia(p1, p2);
     printf("%.2f\n", d);
+
+    libera_ponto(p1);
+    libera_ponto(p2);
 }
