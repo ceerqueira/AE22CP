@@ -53,6 +53,6 @@ Livro * retorna_mais_barato(Livro **l, int n) {
   return mais_barato;
 }
 
-// filtro por genero
-// filtro por ano (lançamentos)
-// libera livro
+// mostra livros de um determinado genero
+// mostra livros que são lançamento
+// libera livros
