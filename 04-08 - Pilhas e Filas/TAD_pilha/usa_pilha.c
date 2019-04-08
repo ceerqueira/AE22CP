@@ -30,4 +30,5 @@ main() {
   printf("\nDesempilhando:\n");
   desempilha(p);
   imprime_pilha(p);
+  libera_pilha(p);
 }
