@@ -31,13 +31,12 @@ int verifica_fila_cheia(Fila *f) {
 }
 
 void enfileira(Fila* f, int chave) {
-  Item novo_item;
-
   if(verifica_fila_cheia(f)) {
 		printf("Erro: a fila está cheia.\n");
     return;
   }
 	else {
+    Item novo_item;
     novo_item.chave = chave;
 		f->item[f->ultimo] = novo_item;
 		f->ultimo = (f->ultimo + 1) % MAXTAM;

@@ -26,13 +26,12 @@ int verifica_lista_cheia(Lista *l) {
 
 // adiciona um elemento no fim da lista
 void adiciona_item_fim_lista(Lista *l, int chave) {
-    Item novo_item;
-
     if(verifica_lista_cheia(l)){
         printf("Erro: a lista está cheia.\n");
         return;
     }
     else {
+        Item novo_item;
         novo_item.chave = chave;
         l->ultimo++;
         l->item[l->ultimo] = novo_item;

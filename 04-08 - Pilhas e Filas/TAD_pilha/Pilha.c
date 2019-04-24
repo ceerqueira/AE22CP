@@ -26,13 +26,12 @@ int verifica_pilha_cheia(Pilha *p) {
 
 // empilha
 void empilha(Pilha *p, int chave) {
-    Item novo_item;
-
     if(verifica_pilha_cheia(p)){
         printf("Erro: a pilha está cheia.\n");
         return;
     }
     else {
+        Item novo_item;
         novo_item.chave = chave;
         p->topo++;
         p->item[p->topo] = novo_item;
@@ -51,7 +50,7 @@ int verifica_pilha_vazia(Pilha *p) {
     return p->topo == -1;
 }
 
-// desempilha 
+// desempilha
 void desempilha(Pilha *p) {
     if (verifica_pilha_vazia(p)) {
         printf("Erro: a pilha está vazia.\n");
