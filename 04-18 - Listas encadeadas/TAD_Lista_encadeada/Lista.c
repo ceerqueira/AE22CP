@@ -33,7 +33,7 @@ int verifica_lista_vazia(Lista *l) {
   return l->primeira == NULL;
 }
 
-Lista * insere_inicio_lista(Lista *l, int chave) {
+void insere_inicio_lista(Lista *l, int chave) {
   // cria novo item que vai ser guardado na lista
   Item novo;
   novo.chave = chave;
@@ -44,7 +44,6 @@ Lista * insere_inicio_lista(Lista *l, int chave) {
   nova->prox = l->primeira;
   // a primeira agora é a nova célula
   l->primeira = nova;
-  return l;
 }
 
 int tamanho_lista(Lista *l) {
@@ -71,7 +70,7 @@ Celula * busca_por_chave(Lista *l, int chave) {
   return aux;
 }
 
-Lista * insere_meio_lista(Lista *l, int chave, int x) {
+void insere_meio_lista(Lista *l, int chave, int x) {
   // cria novo item que vai ser guardado na lista
   Item novo;
   novo.chave = chave;
@@ -91,10 +90,9 @@ Lista * insere_meio_lista(Lista *l, int chave, int x) {
   else {
     printf("O item informado não existe.\n");
   }
-  return l;
 }
 
-Lista * insere_fim_lista(Lista *l, int chave) {
+void insere_fim_lista(Lista *l, int chave) {
   // cria novo item que vai ser guardado na lista
   Item novo;
   novo.chave = chave;
@@ -113,7 +111,6 @@ Lista * insere_fim_lista(Lista *l, int chave) {
   }
   // após a última, inserir a nova célula
   ultima->prox = nova;
-  return l;
 }
 
 void imprime(Lista *l) {
@@ -124,21 +121,18 @@ void imprime(Lista *l) {
 }
 
 // remove item após determinada posição
-Lista * remove_item(Lista *l, int x) {
+void remove_item(Lista *l, int x) {
   Celula *anterior = busca_por_chave(l, x);
   if(verifica_lista_vazia(l) || anterior == NULL) {
     printf("Erro: a lista está vazia ou o item não existe.\n");
-    return 0;
+    return;
   }
-  else {
-    // será removida aquela que vem depois da célula com o item da chave buscada
-    Celula *remover = anterior->prox;
-    // liga a anterior com a próxima da que vai ser removida
-    anterior->prox = remover->prox;
-    // libera memória
-    free(remover);
-    return l;
-  }
+  // será removida aquela que vem depois da célula com o item da chave buscada
+  Celula *remover = anterior->prox;
+  // liga a anterior com a próxima da que vai ser removida
+  anterior->prox = remover->prox;
+  // libera memória
+  free(remover);
 }
 
 void libera_lista(Lista *l) {
