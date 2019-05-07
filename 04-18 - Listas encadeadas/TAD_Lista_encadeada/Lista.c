@@ -101,16 +101,21 @@ void insere_fim_lista(Lista *l, int chave) {
   nova->item = novo;
   // a nova célula vai ser a última, então após ela tem NULL
   nova->prox = NULL;
-  /* variável auxiliar que vai guardar o endereço da última célula
-  para inserir a nova depois da última */
-  Celula *ultima;
-  // partindo da primeira célula, percorrer a lista até achar a última
-  ultima = l->primeira;
-  while(ultima->prox != NULL) {
-    ultima = ultima->prox;
+
+  if(verifica_lista_vazia(l)) // se a lista está vazia, quem vai apontar para a nova é a primeira
+    l->primeira = nova;
+  else { // se não está vazia, quem vai apontar para a nova é a que era a última
+    /* variável auxiliar que vai guardar o endereço da última célula
+    para inserir a nova depois da última */
+    Celula *ultima;
+    // partindo da primeira célula, percorrer a lista até achar a última
+    ultima = l->primeira;
+    while(ultima->prox != NULL) {
+      ultima = ultima->prox;
+    }
+    // após a última, inserir a nova célula
+    ultima->prox = nova;
   }
-  // após a última, inserir a nova célula
-  ultima->prox = nova;
 }
 
 void imprime(Lista *l) {

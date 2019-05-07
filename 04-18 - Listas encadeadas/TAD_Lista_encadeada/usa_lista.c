@@ -5,6 +5,7 @@ main() {
   Lista *l;
 
   l = cria_lista_vazia();
+
   printf("\nVazia: %d\n", verifica_lista_vazia(l));
 
   printf("\nInserindo itens no início:\n");
