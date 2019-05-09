@@ -1,152 +1,265 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "Lista.h"
 
-// item que vai ser guardado na lista
+
+typedef struct item Item;
+typedef struct vertice Vertice;
+typedef struct grafo Grafo;
+typedef struct aresta Aresta;
+
+
 struct item {
   int chave;
-  // demais campos;
 };
 
-// a célula contém um item e um ponteiro para a próxima célula da lista
-struct celula {
+struct aresta{
+    Item item;
+    Aresta *prox;
+};
+
+struct vertice {
+  struct vertice *prox;
+  Aresta *inicio;
   Item item;
-  struct celula *prox;
 };
 
-/* a struct lista gurada o endereço da primeira célula de lista. A partir da
-primeira é possível acessar todas as outras */
-struct lista {
-  Celula *primeira;
+struct grafo {
+  Vertice *inicio;
 };
 
-Lista * cria_lista_vazia() {
-  Lista *l = malloc(sizeof(Lista));
-  /* NULL é um ponteiro nulo, pode ser usado para inicializar um ponteiro
-  que ainda não está associado a um endereço de memória */
-  l->primeira = NULL;
-  return l;
+Grafo * cria_grafo_vazio() {
+  Grafo *g = malloc(sizeof(Grafo));
+  g->inicio = NULL;
+  return g;
 }
 
-int verifica_lista_vazia(Lista *l) {
-  // se a primeira ainda aponta para NULL, então está vazia
-  return l->primeira == NULL;
+int verifica_grafo_vazio(Grafo *g) {
+  // se a primeira ainda aponta para NULL, ent�o est� vazia
+  return g->inicio == NULL;
 }
 
-void insere_inicio_lista(Lista *l, int chave) {
-  // cria novo item que vai ser guardado na lista
-  Item novo;
-  novo.chave = chave;
-  // cria nova célula que vai guardar o item
-  Celula *nova = malloc(sizeof(Celula));
-  nova->item = novo;
-  // estamos inserindo no início, então a próxima célula é aquela que era a 1a
-  nova->prox = l->primeira;
-  // a primeira agora é a nova célula
-  l->primeira = nova;
+int verifica_aresta_vazia(Vertice *v) {
+  // se a primeira ainda aponta para NULL, ent�o est� vazia
+  return v->inicio == NULL;
 }
 
-int tamanho_lista(Lista *l) {
-   Celula *aux = l->primeira;
-   int i = 0;
-   while(aux != NULL) {
-      aux = aux->prox;
-      i++;
-   }
-   return i;
+int verifica_vertice(Grafo *g, int vertice){
+    //verificar se ja existe este vertice
+        Vertice *teste = g->inicio;
+        while (teste->prox != NULL ){
+            if(teste->item.chave == vertice){
+                printf("O VERTICE %d JA EXISTE.\n",vertice);
+                return 1;
+            }
+            teste = teste->prox;
+        }
+        return 0;
 }
 
-/* retorna a célula contendo o item correspondente a chave informada
-ou NULL se não encontrou */
-Celula * busca_por_chave(Lista *l, int chave) {
-  int achou = 0;
-  Celula *aux = l->primeira;
-  while(achou == 0 && aux != NULL) {
-    if(aux->item.chave == chave)
-      achou = 1;
-    else
-      aux = aux->prox;
-  }
-  return aux;
-}
+void inserir_vertice(Grafo *g, int vertice){
 
-void insere_meio_lista(Lista *l, int chave, int x) {
-  // cria novo item que vai ser guardado na lista
-  Item novo;
-  novo.chave = chave;
-  // cria nova célula que vai guardar o item
-  Celula *nova = malloc(sizeof(Celula));
-  nova->item = novo;
-  // acha a célula após a qual será feita a inserção
-  Celula *aux = busca_por_chave(l, x);
-  if(aux != NULL) {
-    /* a nova célula vai ser inserida depois de aux, então sua próxima célula
-    será aquela que era a próxima de aux */
-    nova->prox = aux->prox;
-    /* a nova célula vai ser inserida depois de aux, então a próxima célula
-    de aux é a nova célula */
-    aux->prox = nova;
-  }
-  else {
-    printf("O item informado não existe.\n");
-  }
-}
+    //verifica se grafo esta vazio.
+    Vertice *novo = malloc(sizeof(Vertice));
 
-void insere_fim_lista(Lista *l, int chave) {
-  // cria novo item que vai ser guardado na lista
-  Item novo;
-  novo.chave = chave;
-  // cria nova célula que vai guardar o item
-  Celula *nova = malloc(sizeof(Celula));
-  nova->item = novo;
-  // a nova célula vai ser a última, então após ela tem NULL
-  nova->prox = NULL;
+    novo->item.chave=vertice;
+    novo->prox = NULL;
+    novo->inicio=NULL;
 
-  if(verifica_lista_vazia(l)) // se a lista está vazia, quem vai apontar para a nova é a primeira
-    l->primeira = nova;
-  else { // se não está vazia, quem vai apontar para a nova é a que era a última
-    /* variável auxiliar que vai guardar o endereço da última célula
-    para inserir a nova depois da última */
-    Celula *ultima;
-    // partindo da primeira célula, percorrer a lista até achar a última
-    ultima = l->primeira;
-    while(ultima->prox != NULL) {
-      ultima = ultima->prox;
+    if(verifica_grafo_vazio(g)){
+        g->inicio = novo;
+    }else{
+        if(verifica_vertice(g,vertice))
+          return;
+        Vertice *aux = g->inicio;
+        while (aux->prox != NULL){
+            aux = aux->prox;
+        }
+
+        aux->prox = novo;
     }
-    // após a última, inserir a nova célula
-    ultima->prox = nova;
-  }
 }
 
-void imprime(Lista *l) {
-    Celula *aux;
-    // partindo da primeira célula, percorrer a lista até achar a última
-    for(aux = l->primeira; aux != NULL; aux = aux->prox)
-        printf("chave = %d\n", aux->item.chave);
+void imprime(Grafo *g){
+    //verificar se ja existe este vertice
+        Vertice *teste = g->inicio;
+        printf("Vertice:\n");
+        while (teste != NULL){
+            printf("\n[%d]",teste->item.chave );
+            Aresta *aux = teste->inicio;
+            while(aux != NULL){
+                 printf(" -> [%d]",aux->item.chave );
+                 aux = aux->prox;
+            }
+            teste = teste->prox;
+            }
+            printf("\n");
+        return;
 }
 
-// remove item após determinada posição
-void remove_item(Lista *l, int x) {
-  Celula *anterior = busca_por_chave(l, x);
-  if(verifica_lista_vazia(l) || anterior == NULL) {
-    printf("Erro: a lista está vazia ou o item não existe.\n");
-    return;
-  }
-  // será removida aquela que vem depois da célula com o item da chave buscada
-  Celula *remover = anterior->prox;
-  // liga a anterior com a próxima da que vai ser removida
-  anterior->prox = remover->prox;
-  // libera memória
-  free(remover);
-}
-
-void libera_lista(Lista *l) {
-  Celula *aux = l->primeira;
-  Celula *liberar;
-  while(aux != NULL) {
-    liberar = aux;
+Vertice * busca_vertice(Grafo *g, int vertice){ //retorna o endereço do Vertice.
+  Vertice *aux = g->inicio;
+  while (aux != NULL && g->inicio !=NULL){
+    if (aux->item.chave == vertice){
+      return aux;
+    }
     aux = aux->prox;
-    free(liberar);
   }
-  free(l);
+  printf("VERTICE NAO ENCONTRADO\n");
+  return NULL;
+
+}
+
+
+
+int verifica_aresta(Vertice *v, int aresta){
+    //verificar se ja existe esta aresta
+        Aresta *teste = v->inicio;
+        while (teste!= NULL ){
+            if(teste->item.chave == aresta){
+                return 1;
+            }
+            teste = teste->prox;
+        }
+        return 0;
+}
+
+
+void inserir_aresta(Grafo *g,int aresta_1, int aresta_2){
+  Aresta *nova_aresta_1 = malloc(sizeof(Aresta));
+  Aresta *nova_aresta_2 = malloc(sizeof(Aresta));
+
+  Vertice *auxiliar_1 = busca_vertice(g,aresta_1);
+  Vertice *auxiliar_2 = busca_vertice(g,aresta_2);
+  // faz a verificacao para saber se existem Os vertices solititados
+  if(auxiliar_1 != NULL && auxiliar_2 != NULL){
+
+    //se o vertice nao tiver nenhuma aresta ele vai inserir no inicio
+    if(verifica_aresta_vazia(auxiliar_1)){
+       auxiliar_1->inicio = nova_aresta_1;
+    }else{
+
+      if(verifica_aresta(auxiliar_1,aresta_2)){
+        printf("A ARESTA %d JA EXISTE.\n",aresta_2 );
+        return;
+      }
+
+
+      Aresta *aux = auxiliar_1->inicio;
+      while(aux->prox != NULL){
+          aux = aux->prox;
+        }
+        aux -> prox = nova_aresta_1;
+    }
+
+      nova_aresta_1->item.chave = aresta_2;
+      nova_aresta_1->prox = NULL;
+
+
+    if(verifica_aresta_vazia(auxiliar_2)){
+         auxiliar_2->inicio = nova_aresta_2;
+      }else{
+        Aresta *aux = auxiliar_2->inicio;
+        while(aux->prox != NULL){
+            aux = aux->prox;
+          }
+          aux -> prox = nova_aresta_2;
+      }
+
+        nova_aresta_2->item.chave = aresta_1;
+        nova_aresta_2->prox = NULL;
+      }
+}
+
+
+void remover_arestas(Grafo *g,int aresta_1, int aresta_2 ){
+    Vertice *auxiliar_1 = busca_vertice(g,aresta_1);
+    Vertice *auxiliar_2 = busca_vertice(g,aresta_2);
+
+    //VERIFICANDO SE AS ARESTA DO VERTICE ESTAO VAZIA
+    if(verifica_aresta_vazia(auxiliar_1) ){
+        printf("O VERTICE %d ESTA VAZIO\n", auxiliar_1->item.chave);
+        return;
+    }
+
+    if(verifica_aresta_vazia(auxiliar_2) ){
+        printf("O VERTICE %d ESTA VAZIO\n", auxiliar_2->item.chave);
+        return;
+    }
+
+
+    //REMOVENDO ARESTA 2
+    Aresta *anterior = auxiliar_1->inicio;
+    if(anterior->item.chave == aresta_2){
+        Aresta *remover = anterior;
+        // liga a anterior com a próxima da que vai ser removida
+        if(anterior->prox == NULL){
+            auxiliar_1->inicio == NULL;
+            free(remover);
+        }else{
+            auxiliar_1->inicio = remover->prox;
+            free(remover);
+        }
+
+    }else{
+        while(anterior->prox->item.chave != aresta_2){
+          anterior = anterior->prox;
+        }
+        // será removida aquela que vem depois da aresta com o item da chave buscada
+        Aresta *remover = anterior->prox;
+        // liga a anterior com a próxima da que vai ser removida
+        anterior->prox = remover->prox;
+        free(remover);
+    }
+
+/*
+    //REMOVENDO ARESTA 1
+    Aresta *anterior_2 = auxiliar_2->inicio;
+    if(anterior_2->item.chave == aresta_1){
+        Aresta *remover_2 = anterior_2;
+        // liga a anterior com a próxima da que vai ser removida
+        if(anterior_2->prox == NULL){
+            auxiliar_2->inicio == NULL;
+            free(remover_2);
+        }else{
+            auxiliar_2->inicio = remover_2->prox;
+            free(remover_2);
+        }
+
+    }else{
+        while(anterior_2->prox->item.chave != aresta_1){
+              anterior_2 = anterior_2->prox;
+            }
+        // será removida aquela que vem depois da aresta com o item da chave buscada
+        Aresta *remover_2 = anterior_2->prox;
+        // liga a anterior com a próxima da que vai ser removida
+        anterior_2->prox = remover_2->prox;
+        free(remover_2);
+    }
+    */
+}
+int main (void){
+    Grafo *g=cria_grafo_vazio();
+    inserir_vertice(g,5);
+    inserir_vertice(g,6);
+    inserir_vertice(g,7);
+    inserir_vertice(g,8);
+    inserir_vertice(g,9);
+    inserir_vertice(g,10);
+    inserir_aresta(g,5,6);
+    inserir_aresta(g,5,7);
+    inserir_aresta(g,5,8);
+    inserir_aresta(g,5,9);
+    inserir_aresta(g,5,10);
+    inserir_aresta(g,7,6);
+    imprime(g);
+    remover_arestas(g,5,6);
+    imprime(g);
+
+
+   // remover_arestas(g,8,9);
+
+
+
+    //inserir_aresta(g,7,7);
 }
